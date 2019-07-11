@@ -7,7 +7,7 @@ const cors = require('cors');
 const app = express();
 
 app.use(cors());
-app.use(bodyparser.text());
+app.use(bodyparser.json());
 
 
 mongoose.connect('mongodb://localhost/hospicheck', { useNewUrlParser: true });
@@ -22,17 +22,14 @@ db.once('open', ()=>{
     console.log("connected to mongodb");
 });
 
-// app.use((req,res)=>{
-//     console.log(req.body);
-//     next();
-// });
+app.use((req, res, next)=> {
+	console.log(`${req.method} request for '${req.url}'`);
+	next();
+});
 
-app.get('/searchQuery/',(req,res)=>{
-    const searchInput = req.query.searchinput;
-    // const abc=JSON.stringify(searchInput);
-    console.log(searchInput);
-    // console.log(req.body);
-    res.send("heyy");
+app.post('/searchQuery', (req,res)=>{
+    console.log(req.body);
+    res.json({"success":"got your request"});
 });
 
 //Hospital Data Insert
