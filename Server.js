@@ -1,8 +1,7 @@
 const fs = require('fs');
-
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
-
 const cors = require('cors');
 
 const app = express();
@@ -11,23 +10,23 @@ app.use(cors());
 app.use(bodyparser.json());
 
 
-const mongoose = require('mongoose');
-
-mongoose.connect('mongodb://localhost/HospiCheck', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/hello', { useNewUrlParser: true });
 
 var db = mongoose.connection;
 
 db.on('error', ()=>{
-
-console.log("error");
-
-})
+    console.log("error");
+});
 
 db.once('open', ()=>{
+    console.log("connected to mongodb");
+});
 
-console.log("connected to mongodb");
+// app.use((req,res)=>{
+//     console.log(req.body);
+//     next();
+// });
 
-})
 
 
 //Hospital Data Insert
@@ -38,124 +37,131 @@ const hospital = mongoose.model('hospital', {
     hospAddr: String,
     city: String,
     phone: Number,
-    type: String
-
+    type: String,
+    website: String,
+    wheelchairAccess: String
+    
 });
 
-
-
 const readdata = fs.readFileSync('json.json');
+const data = JSON.parse(readdata);
 
-    const data = JSON.parse(readdata);
+//     // let objjson, obj;
 
-    let objjson, obj;
-
-    
-   
-    data.records.forEach(element => {
+data.records.forEach(element => {
         
-        // let count = 0;
-       
-        
-const hospitalDataList = new hospital(
+    const hospitalDataList = new hospital(
     {
 
         hospName: element.SV_NAME,
-    hospAddr: element.STREET_NUMBER, 
-    city: element.CITY,
-   phone: element.PHONE_NUMBER,
-   type: "hospital"
-   
-
+        hospAddr: element.STREET_NUMBER, 
+        city: element.CITY,
+        phone: element.PHONE_NUMBER,
+        type: "hospital",
+        website: element.WEBSITE,
+        wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE
+    });
+    hospitalDataList.save();
 });
 
-        hospitalDataList.save();
+//     //Clinics data insert
 
+const clinics = mongoose.model('clinics', {
     
-    });
-    
-
-    //Clinics data insert
-
-
-    const clinics = mongoose.model('clinics', {
-
-        
     clinicName: String,
     clinicAddr: String,
     city: String,
     phone: Number,
-    type: String
-
-
-    })
-
-    const readdata2 = fs.readFileSync('clinics.json');
-
-    const data2 = JSON.parse(readdata2);
-
-
-    data2.records.forEach(elements => {
-        
-
-        const clinicslist = new clinics({
-
-
-            
-    clinicName: elements.RG_NAME,
-    clinicAddr: elements.STREET_NUMBER,
-    city: elements.CITY,
-    phone: elements.PHONE_NUMBER,
-    type: "Walkinclinics"
-
-
-        })
-
-        clinicslist.save();
+    type: String,
+    website: String,
+    wheelchairAccess: String
+});
 
 
 
-
-    });
-    
 
     // filtering based on different cities
 
-    clinics.find({ city: "Vancouver" }, (err,document)=>{
+    // clinics.find({ city: "Vancouver" }, (err,document)=>{
 
 
-        // console.log(document);
+    //     // console.log(document);
 
 
-    })
+    // })
 
-    // sorting  
-
-
-    const abc = hospital.find({ city: "Vancouver", phone: null } , (err, document) =>{
+    // // sorting  
 
 
-        console.log(document);
-
-    }); 
+    // const abc = hospital.find({ city: "Vancouver", phone: null } , (err, document) =>{
 
 
+    //     console.log(document);
+
+    // }); 
 
 
+const readdata2 = fs.readFileSync('clinics.json');
 
-  
+const data2 = JSON.parse(readdata2);
 
+data2.records.forEach(element => {
 
-
-     
-
-
-
+    const clinicslist = new clinics(
+    {
     
+        clinicName: element.RG_NAME,
+        clinicAddr: element.STREET_NUMBER,
+        city: element.CITY,
+        phone: element.PHONE_NUMBER,
+        type: "walkin",
+        website: element.WEBSITE,
+        wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE
+    });
+    clinicslist.save();
+
+});
+
+app.post("/searchQuery", (req, res)=>{
 
 
-app.listen(3000, function(){
+console.log(req.body);
 
 
-    console.log("Server Running");
+
+hospital.find({ city: req.body.msg }, (error,document)=>{
+
+    console.log(document);
+    
+ 
+       });
+
+
 })
+
+// app.get('/searchQuery', async (req,res)=>{
+
+//     console.log("hello");
+//     const searchInput = req.msg;
+//     // const abc=JSON.stringify(searchInput);
+//     console.log(searchInput);
+//     // console.log(req.body);
+   
+//     hospital.find({ city: searchInput  }, (error, document)=>{
+ 
+//         console.log(document);
+
+
+//    })
+
+
+
+
+
+
+   
+   
+//     res.send("heyy");
+// });
+
+app.listen(3000, ()=> console.log("Server Running"));
