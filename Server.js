@@ -22,12 +22,16 @@ db.once('open', ()=>{
     console.log("connected to mongodb");
 });
 
-// app.use((req,res)=>{
+app.use((req, res, next)=> {
+	console.log(`${req.method} request for '${req.url}'`);
+	next();
+});
+
+
+// app.post('/searchQuery', (req,res)=>{
 //     console.log(req.body);
-//     next();
+//     res.json({"success":"got your request"});
 // });
-
-
 
 //Hospital Data Insert
 
