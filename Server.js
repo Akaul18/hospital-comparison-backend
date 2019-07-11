@@ -119,7 +119,25 @@ const hospitalDataList = new hospital(
     });
     
 
+    // filtering based on different cities
 
+    clinics.find({ city: "Vancouver" }, (err,document)=>{
+
+
+        // console.log(document);
+
+
+    })
+
+    // sorting  
+
+
+    const abc = hospital.find({ city: "Vancouver", phone: null } , (err, document) =>{
+
+
+        console.log(document);
+
+    }); 
 
 
 
