@@ -44,6 +44,8 @@ const hospital = mongoose.model('hospital', {
     type: String,
     website: String,
     wheelchairAccess: String
+
+
     
 });
 
@@ -64,6 +66,7 @@ data.records.forEach(element => {
         type: "hospital",
         website: element.WEBSITE,
         wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE
+        // rating: 
     });
     hospitalDataList.save();
 });
@@ -105,6 +108,8 @@ const clinics = mongoose.model('clinics', {
     // }); 
 
 
+
+
 const readdata2 = fs.readFileSync('clinics.json');
 
 const data2 = JSON.parse(readdata2);
@@ -142,6 +147,8 @@ hospital.find({ city: req.body.msg }, (error,document)=>{
 
 
 })
+
+
 
 // app.get('/searchQuery', async (req,res)=>{
 
