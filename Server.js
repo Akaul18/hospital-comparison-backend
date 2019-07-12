@@ -10,7 +10,7 @@ app.use(cors());
 app.use(bodyparser.json());
 
 
-mongoose.connect('mongodb://localhost/hello', { useNewUrlParser: true });
+mongoose.connect('mongodb://localhost/hospicheck', { useNewUrlParser: true });
 
 var db = mongoose.connection;
 
@@ -22,15 +22,9 @@ db.once('open', ()=>{
     console.log("connected to mongodb");
 });
 
-app.use((req, res, next)=> {
-	console.log(`${req.method} request for '${req.url}'`);
-	next();
-});
-
-
-// app.post('/searchQuery', (req,res)=>{
-//     console.log(req.body);
-//     res.json({"success":"got your request"});
+// app.use((req, res, next)=> {
+// 	console.log(`${req.method} request for '${req.url}'`);
+// 	next();
 // });
 
 //Hospital Data Insert
@@ -43,30 +37,35 @@ const hospital = mongoose.model('hospital', {
     phone: Number,
     type: String,
     website: String,
-    wheelchairAccess: String
+    wheelchairAccess: String,
+    rating: Number,
+    department: [{type1:String,type2:String,type3:String,type4:String,type5:String}]
     
 });
 
-const readdata = fs.readFileSync('json.json');
-const data = JSON.parse(readdata);
+// const readdata = fs.readFileSync('json.json');
+// const data = JSON.parse(readdata);
 
-//     // let objjson, obj;
+// //     // let objjson, obj;
 
-data.records.forEach(element => {
+// data.records.forEach(element => {
         
-    const hospitalDataList = new hospital(
-    {
+//     const hospitalDataList = new hospital(
+//     {
 
-        hospName: element.SV_NAME,
-        hospAddr: element.STREET_NUMBER, 
-        city: element.CITY,
-        phone: element.PHONE_NUMBER,
-        type: "hospital",
-        website: element.WEBSITE,
-        wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE
-    });
-    hospitalDataList.save();
-});
+//         hospName: element.SV_NAME,
+//         hospAddr: element.STREET_NUMBER, 
+//         city: element.CITY,
+//         phone: element.PHONE_NUMBER,
+//         type: "hospital",
+//         website: element.WEBSITE,
+//         wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE,
+//         rating: (Math.random() * (4 - 3 + 1) + 3).toFixed(1),
+//         department: {type1:"Cardiology",type2:"Ent",type3:"Gastroenterology",type4:"Gynaecology",type5:"Orthopedic"}
+        
+//     });
+//     hospitalDataList.save();
+// });
 
 //     //Clinics data insert
 
@@ -78,7 +77,9 @@ const clinics = mongoose.model('clinics', {
     phone: Number,
     type: String,
     website: String,
-    wheelchairAccess: String
+    wheelchairAccess: String,
+    rating: Number,
+    department: [{type1:String,type2:String,type3:String,type4:String,type5:String}]
 });
 
 
@@ -105,43 +106,36 @@ const clinics = mongoose.model('clinics', {
     // }); 
 
 
-const readdata2 = fs.readFileSync('clinics.json');
+// const readdata2 = fs.readFileSync('clinics.json');
 
-const data2 = JSON.parse(readdata2);
+// const data2 = JSON.parse(readdata2);
 
-data2.records.forEach(element => {
+// data2.records.forEach(element => {
 
-    const clinicslist = new clinics(
-    {
+//     const clinicslist = new clinics(
+//     {
     
-        clinicName: element.RG_NAME,
-        clinicAddr: element.STREET_NUMBER,
-        city: element.CITY,
-        phone: element.PHONE_NUMBER,
-        type: "walkin",
-        website: element.WEBSITE,
-        wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE
-    });
-    clinicslist.save();
+//         clinicName: element.RG_NAME,
+//         clinicAddr: element.STREET_NUMBER,
+//         city: element.CITY,
+//         phone: element.PHONE_NUMBER,
+//         type: "walkin",
+//         website: element.WEBSITE,
+//         wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE,
+//         rating: (Math.random() * (4 - 3 + 1) + 3).toFixed(1),
+//         department: {type1:"Cardiology",type2:"Ent",type3:"Gastroenterology",type4:"Gynaecology",type5:"Orthopedic"}
+//     });
+//     clinicslist.save();
 
-});
+// });
 
 app.post("/searchQuery", (req, res)=>{
 
-
-console.log(req.body);
-
-
-
-hospital.find({ city: req.body.msg }, (error,document)=>{
-
-    console.log(document);
-    
- 
-       });
-
-
-})
+    console.log(req.body);
+    hospital.find({ city: req.body.searchcity, type:req.body.searchinput   }, (error,document)=>{
+        console.log(document);
+    });
+});
 
 // app.get('/searchQuery', async (req,res)=>{
 
@@ -157,13 +151,6 @@ hospital.find({ city: req.body.msg }, (error,document)=>{
 
 
 //    })
-
-
-
-
-
-
-   
    
 //     res.send("heyy");
 // });
