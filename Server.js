@@ -40,7 +40,6 @@ const hospital = mongoose.model('hospital', {
     wheelchairAccess: String,
     rating: Number,
     department: [{type1:String,type2:String,type3:String,type4:String,type5:String}]
-    
 });
 
 // const readdata = fs.readFileSync('json.json');
@@ -132,7 +131,7 @@ const clinics = mongoose.model('clinics', {
 app.post("/searchQuery", (req, res)=>{
 
     console.log(req.body);
-    hospital.find({ city: req.body.searchcity, type:req.body.searchinput   }, (error,document)=>{
+    hospital.find({ hospName:req.body.searchinput,city: req.body.searchcity}, (error,document)=>{
         console.log(document);
     });
 });
