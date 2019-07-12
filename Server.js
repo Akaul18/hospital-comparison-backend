@@ -40,7 +40,6 @@ const hospital = mongoose.model('hospital', {
     wheelchairAccess: String,
     rating: Number,
     department: [{type1:String,type2:String,type3:String,type4:String,type5:String}]
-    
 });
 
 const readdata = fs.readFileSync('json.json');
@@ -153,7 +152,10 @@ app.post("/searchQuery", (req, res)=>{
         
    
 //     }).sort({ hospName: "BC Children's Hospital" });
-});
+//     hospital.find({ hospName:req.body.searchinput,city: req.body.searchcity}, (error,document)=>{
+//         console.log(document);
+//     });
+// });
 
 
 
