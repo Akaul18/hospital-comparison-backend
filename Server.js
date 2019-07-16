@@ -22,10 +22,10 @@ db.once('open', ()=>{
     console.log("connected to mongodb");
 });
 
-// app.use((req, res, next)=> {
-// 	console.log(`${req.method} request for '${req.url}'`);
-// 	next();
-// });
+app.use((req, res, next)=> {
+	console.log(`${req.method} request for '${req.url}'`);
+	next();
+});
 
 //Hospital Data Insert
 
@@ -39,32 +39,31 @@ const hospital = mongoose.model('hospital', {
     website: String,
     wheelchairAccess: String,
     rating: Number,
-    department: [{type1:String,type2:String,type3:String,type4:String,type5:String}]
+    // department: [{type1:String,type2:String,type3:String,type4:String,type5:String}]
+    department: [String]
 });
 
-const readdata = fs.readFileSync('json.json');
-const data = JSON.parse(readdata);
+// const readdata = fs.readFileSync('json.json');
+// const data = JSON.parse(readdata);
 
-// //     // let objjson, obj;
-
-data.records.forEach(element => {
+// data.records.forEach(element => {
         
-    const hospitalDataList = new hospital(
-    {
+//     const hospitalDataList = new hospital(
+//     {
 
-        hospName: element.SV_NAME,
-        hospAddr: element.STREET_NUMBER, 
-        city: element.CITY,
-        phone: element.PHONE_NUMBER,
-        type: "hospital",
-        website: element.WEBSITE,
-        wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE,
-        rating: (Math.random() * (4 - 3 + 1) + 3).toFixed(1),
-        department: {type1:"Cardiology",type2:"Ent",type3:"Gastroenterology",type4:"Gynaecology",type5:"Orthopedic"}
+//         hospName: element.SV_NAME,
+//         hospAddr: element.STREET_NUMBER, 
+//         city: element.CITY,
+//         phone: element.PHONE_NUMBER,
+//         type: "hospital",
+//         website: element.WEBSITE,
+//         wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE,
+//         rating: (Math.random() * (4 - 3 + 1) + 3).toFixed(1),
+//         department: ["Cardiology","Ent","Gastroenterology","Gynaecology","Orthopedic"]
         
-    });
-    hospitalDataList.save();
-});
+//     });
+//     hospitalDataList.save();
+// });
 
 //     //Clinics data insert
 
@@ -78,81 +77,36 @@ const clinics = mongoose.model('clinics', {
     website: String,
     wheelchairAccess: String,
     rating: Number,
-    department: [{type1:String,type2:String,type3:String,type4:String,type5:String}]
+    // department: [{type1:String,type2:String,type3:String,type4:String,type5:String}]
+    department: [String]
 });
-
-
-
-
-    // filtering based on different cities
-
-    // clinics.find({ city: "Vancouver" }, (err,document)=>{
-
-
-    //     // console.log(document);
-
-
-    // })
-
-    // // sorting  
-
-
-    // const abc = hospital.find({ city: "Vancouver", phone: null } , (err, document) =>{
-
-
-    //     console.log(document);
-
-    // }); 
-
-
 
 
 // const readdata2 = fs.readFileSync('clinics.json');
-const readdata2 = fs.readFileSync('clinics.json');
+// const data2 = JSON.parse(readdata2);
 
-const data2 = JSON.parse(readdata2);
+// data2.records.forEach(element => {
 
-data2.records.forEach(element => {
-
-    const clinicslist = new clinics(
-    {
+//     const clinicslist = new clinics(
+//     {
     
-        clinicName: element.RG_NAME,
-        clinicAddr: element.STREET_NUMBER,
-        city: element.CITY,
-        phone: element.PHONE_NUMBER,
-        type: "walkin",
-        website: element.WEBSITE,
-        wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE,
-        rating: (Math.random() * (4 - 3 + 1) + 3).toFixed(1),
-        department: {type1:"Cardiology",type2:"Ent",type3:"Gastroenterology",type4:"Gynaecology",type5:"Orthopedic"}
-    });
-    clinicslist.save();
+//         clinicName: element.RG_NAME,
+//         clinicAddr: element.STREET_NUMBER,
+//         city: element.CITY,
+//         phone: element.PHONE_NUMBER,
+//         type: "walkin",
+//         website: element.WEBSITE,
+//         wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE,
+//         rating: (Math.random() * (4 - 3 + 1) + 3).toFixed(1),
+//         department: ["Cardiology","Ent","Gastroenterology","Gynaecology","Orthopedic"]
+//     });
+//     clinicslist.save();
 
-});
+// });
 
 app.post("/searchQuery", (req, res)=>{
 
-    // let searchinput = req.body.searchinput.toLowerCase();
-    // // searchinput = req.body.searchinput.charAt(0).toUpperCase();
     console.log(req.body.searchinput);
-    // const capitalize = (st) =>{
-    //     if(typeof st!=='string') return '';
-    //     return st.charAt(0).toUpperCase() + st.slice(1);
-    // }
-    // searchinput = capitalize(searchinput);
-
-  
-    
-    
-//     hospital.find( {type:"hospital",$or:[ {hospName: new RegExp(req.body.searchinput)}, {PHONE_NUMBER: new RegExp(req.body.searchinput)}], city: req.body.searchcity} , 
-//   function(err,docs){
-//     if(!err) {
-//         res.send(docs);
-//     console.log(docs);
-//     }
-    
-// });
     
     hospital.find().and([
         { $or: [{hospName:{$regex:req.body.searchinput,$options:'i'}}, {type: {$regex:req.body.searchinput,$options:'i'}}]},
@@ -163,36 +117,11 @@ app.post("/searchQuery", (req, res)=>{
             console.log(docs);
         }
     });
-//     hospital.find({ city: req.body.searchcity}, (error,document)=>{
-        
-//         console.log(document);
-   
-        
-   
-//     }).sort({ hospName: "BC Children's Hospital" });
+
 //     hospital.find({ hospName:req.body.searchinput,city: req.body.searchcity}, (error,document)=>{
 //         console.log(document);
 //     });
 // });
-
-
-
-// app.get('/searchQuery', async (req,res)=>{
-
-//     console.log("hello");
-//     const searchInput = req.msg;
-//     // const abc=JSON.stringify(searchInput);
-//     console.log(searchInput);
-//     // console.log(req.body);
-   
-//     hospital.find({ city: searchInput  }, (error, document)=>{
- 
-//         console.log(document);
-
-
-//    })
-   
-//     res.send("heyy");
 });
 
 app.listen(3000, ()=> console.log("Server Running"));
