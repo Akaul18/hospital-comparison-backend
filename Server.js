@@ -133,18 +133,36 @@ data2.records.forEach(element => {
 
 app.post("/searchQuery", (req, res)=>{
 
-    console.log(req.body);
+    let searchinput = req.body.searchinput.toLowerCase();
+    // searchinput = req.body.searchinput.charAt(0).toUpperCase();
+    // console.log(searchinput);
+    const capitalize = (st) =>{
+        if(typeof st!=='string') return '';
+        return st.charAt(0).toUpperCase() + st.slice(1);
+    }
+    searchinput = capitalize(searchinput);
+
   
     
     
-    hospital.find( {$or:[{hospName: new RegExp(req.body.searchinput)}, {PHONE_NUMBER: new RegExp(req.body.searchinput)}]}, {city: req.body.searchcity} , 
-  function(err,docs){
-    if(!err) {
-        res.send(docs);
-    console.log(docs);
-    }
+//     hospital.find( {type:"hospital",$or:[ {hospName: new RegExp(req.body.searchinput)}, {PHONE_NUMBER: new RegExp(req.body.searchinput)}], city: req.body.searchcity} , 
+//   function(err,docs){
+//     if(!err) {
+//         res.send(docs);
+//     console.log(docs);
+//     }
     
-});
+// });
+    
+    hospital.find().and([
+        { $or: [{hospName: new RegExp(searchinput)}, {type: new RegExp(req.body.searchinput)}]},
+        {city: req.body.searchcity}
+    ]).sort({ rating: -1 }).exec((err,docs)=>{
+        if(!err) {
+            res.send(docs);
+            console.log(docs);
+        }
+    });
 //     hospital.find({ city: req.body.searchcity}, (error,document)=>{
         
 //         console.log(document);
