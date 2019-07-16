@@ -133,14 +133,14 @@ data2.records.forEach(element => {
 
 app.post("/searchQuery", (req, res)=>{
 
-    let searchinput = req.body.searchinput.toLowerCase();
-    // searchinput = req.body.searchinput.charAt(0).toUpperCase();
-    // console.log(searchinput);
-    const capitalize = (st) =>{
-        if(typeof st!=='string') return '';
-        return st.charAt(0).toUpperCase() + st.slice(1);
-    }
-    searchinput = capitalize(searchinput);
+    // let searchinput = req.body.searchinput.toLowerCase();
+    // // searchinput = req.body.searchinput.charAt(0).toUpperCase();
+    console.log(req.body.searchinput);
+    // const capitalize = (st) =>{
+    //     if(typeof st!=='string') return '';
+    //     return st.charAt(0).toUpperCase() + st.slice(1);
+    // }
+    // searchinput = capitalize(searchinput);
 
   
     
@@ -155,7 +155,7 @@ app.post("/searchQuery", (req, res)=>{
 // });
     
     hospital.find().and([
-        { $or: [{hospName: new RegExp(searchinput)}, {type: new RegExp(req.body.searchinput)}]},
+        { $or: [{hospName:{$regex:req.body.searchinput,$options:'i'}}, {type: {$regex:req.body.searchinput,$options:'i'}}]},
         {city: req.body.searchcity}
     ]).sort({ rating: -1 }).exec((err,docs)=>{
         if(!err) {
