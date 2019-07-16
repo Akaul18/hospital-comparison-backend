@@ -137,7 +137,7 @@ app.post("/searchQuery", (req, res)=>{
   
     
     
-    hospital.find(  {hospName: new RegExp(req.body.searchinput)}, {city: req.body.searchcity} , 
+    hospital.find( {$or:[{hospName: new RegExp(req.body.searchinput)}, {PHONE_NUMBER: new RegExp(req.body.searchinput)}]}, {city: req.body.searchcity} , 
   function(err,docs){
     if(!err) {
         res.send(docs);
@@ -175,6 +175,7 @@ app.post("/searchQuery", (req, res)=>{
 //    })
    
 //     res.send("heyy");
-// });
+});
 
 app.listen(3000, ()=> console.log("Server Running"));
+
