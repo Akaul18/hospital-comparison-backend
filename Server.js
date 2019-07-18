@@ -108,20 +108,25 @@ app.post("/searchQuery", (req, res)=>{
 
     console.log(req.body.searchinput);
     
-    hospital.find().and([
-        { $or: [{hospName:{$regex:req.body.searchinput,$options:'i'}}, {type: {$regex:req.body.searchinput,$options:'i'}}]},
-        {city: req.body.searchcity}
-    ]).sort({ rating: -1 }).exec((err,docs)=>{
-        if(!err) {
-            res.send(docs);
-            console.log(docs);
-        }
-    });
+    // hospital.find().and([
+    //     { $or: [{hospName:{$regex:req.body.searchinput,$options:'i'}}, {type: {$regex:req.body.searchinput,$options:'i'}}]},
+    //     {city: req.body.searchcity}
+    // ]).sort({ rating: -1 }).exec((err,docs)=>{
+    //     if(!err) {
+    //         res.send(docs);
+    //         console.log(docs);
+    //     }
+    // });
+    // hospital.find({department: {$regex:req.body.searchinput,$options:'i'}},(err,doc)=>{
+    //     console.log(doc);
+    // });
+});
 
-//     hospital.find({ hospName:req.body.searchinput,city: req.body.searchcity}, (error,document)=>{
-//         console.log(document);
-//     });
-// });
+app.get("/searchQuery", async (req,res)=>{
+    // console.log(req.body);
+    // res.json("welcome");
+    const hospDetails = await hospital.find();
+    res.json(hospDetails);
 });
 
 app.listen(3000, ()=> console.log("Server Running"));
