@@ -39,7 +39,8 @@ const hospital = mongoose.model('hospital', {
     website: String,
     wheelchairAccess: String,
     rating: Number,
-    department: [{type1:String,type2:String,type3:String,type4:String,type5:String}]
+    department: Array,
+    diseases: Array
 });
 
 const readdata = fs.readFileSync('json.json');
@@ -47,24 +48,33 @@ const data = JSON.parse(readdata);
 
 // //     // let objjson, obj;
 
-data.records.forEach(element => {
-        
-    const hospitalDataList = new hospital(
-    {
+//*******************************dont delete (insertion of records commented) */
 
-        hospName: element.SV_NAME,
-        hospAddr: element.STREET_NUMBER, 
-        city: element.CITY,
-        phone: element.PHONE_NUMBER,
-        type: "hospital",
-        website: element.WEBSITE,
-        wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE,
-        rating: (Math.random() * (4 - 3 + 1) + 3).toFixed(1),
-        department: {type1:"Cardiology",type2:"Ent",type3:"Gastroenterology",type4:"Gynaecology",type5:"Orthopedic"}
+// data.records.forEach(element => {
         
-    });
-    hospitalDataList.save();
-});
+//     const hospitalDataList = new hospital(
+//     {
+
+//         hospName: element.SV_NAME,
+//         hospAddr: element.STREET_NUMBER, 
+//         city: element.CITY,
+//         phone: element.PHONE_NUMBER,
+//         type: "hospital",
+//         website: element.WEBSITE,
+//         wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE,
+//         rating: (Math.random() * (4 - 3 + 1) + 3).toFixed(1),
+//         department:["Cardiology","Ent","Gastroenterology","Gynaecology","Orthopedic"],
+//         diseases: ["AIDS","Anthrax","Arthritis","Asthma","Cancer","Cardiovascular Disease",
+//             "Celiac Disease","Chlamydia","Chronic Diseases","Chronic Obstructive Pulmonary Disease",
+//             "Dengue Fever","Diabetes","Food Allergies and Intolerances","Genital Herpes","Gonorrhoea",
+//             ,"Heart Disease","Hepatitis","Influenza Flu", "Lupus","Lyme Disease","Lymphogranuloma venereum (LGV)", "Mad Cow Disease (BSE)", "Malaria",
+//             "Measles","Meningococcal Disease","Mental Health","Obesity","Osteoarthritis","Osteoporosis",
+//             "Rabies","Reye's Syndrome","Sexually Transmitted Infections","Stroke","Sudden Infant Death Syndrome (SIDS)",
+//             "Syphilis","Tuberculosis (TB)","West Nile Virus","Yellow Fever"]
+        
+//     });
+//     hospitalDataList.save();
+// });
 
 //     //Clinics data insert
 
@@ -78,7 +88,8 @@ const clinics = mongoose.model('clinics', {
     website: String,
     wheelchairAccess: String,
     rating: Number,
-    department: [{type1:String,type2:String,type3:String,type4:String,type5:String}]
+    department: Array,
+    diseases: Array
 });
 
 
@@ -106,30 +117,37 @@ const clinics = mongoose.model('clinics', {
 
 
 
+//*******************dont delete. Clinics data inserted */
 
 // const readdata2 = fs.readFileSync('clinics.json');
-const readdata2 = fs.readFileSync('clinics.json');
 
-const data2 = JSON.parse(readdata2);
+// const data2 = JSON.parse(readdata2);
 
-data2.records.forEach(element => {
+// data2.records.forEach(element => {
 
-    const clinicslist = new clinics(
-    {
+//     const clinicslist = new clinics(
+//     {
     
-        clinicName: element.RG_NAME,
-        clinicAddr: element.STREET_NUMBER,
-        city: element.CITY,
-        phone: element.PHONE_NUMBER,
-        type: "walkin",
-        website: element.WEBSITE,
-        wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE,
-        rating: (Math.random() * (4 - 3 + 1) + 3).toFixed(1),
-        department: {type1:"Cardiology",type2:"Ent",type3:"Gastroenterology",type4:"Gynaecology",type5:"Orthopedic"}
-    });
-    clinicslist.save();
+//         clinicName: element.RG_NAME,
+//         clinicAddr: element.STREET_NUMBER,
+//         city: element.CITY,
+//         phone: element.PHONE_NUMBER,
+//         type: "walkin",
+//         website: element.WEBSITE,
+//         wheelchairAccess: element.WHEELCHAIR_ACCESSIBLE,
+//         rating: (Math.random() * (4 - 3 + 1) + 3).toFixed(1),
+//         department: ["Cardiology","Ent","Gastroenterology","Gynaecology","Orthopedic"],
+//         diseases: ["AIDS","Anthrax","Arthritis","Asthma","Cancer","Cardiovascular Disease",
+//             "Celiac Disease","Chlamydia","Chronic Diseases","Chronic Obstructive Pulmonary Disease",
+//             "Dengue Fever","Diabetes","Food Allergies and Intolerances","Genital Herpes","Gonorrhoea",
+//             ,"Heart Disease","Hepatitis","Influenza Flu", "Lupus","Lyme Disease","Lymphogranuloma venereum (LGV)", "Mad Cow Disease (BSE)", "Malaria",
+//             "Measles","Meningococcal Disease","Mental Health","Obesity","Osteoarthritis","Osteoporosis",
+//             "Rabies","Reye's Syndrome","Sexually Transmitted Infections","Stroke","Sudden Infant Death Syndrome (SIDS)",
+//             "Syphilis","Tuberculosis (TB)","West Nile Virus","Yellow Fever"]
+//     });
+//     clinicslist.save();
 
-});
+// });
 
 app.post("/searchQuery", (req, res)=>{
 
@@ -153,28 +171,33 @@ app.post("/searchQuery", (req, res)=>{
 //     }
     
 // });
-    
+
     hospital.find().and([
-        { $or: [{hospName:{$regex:req.body.searchinput,$options:'i'}}, {type: {$regex:req.body.searchinput,$options:'i'}}]},
+        { $or: [{hospName:{$regex:req.body.searchinput,$options:'i'}}, {type: {$regex:req.body.searchinput,$options:'i'}}, {department: {$regex:req.body.searchinput,$options:'i'}},
+        {diseases: {$regex:req.body.searchinput,$options:'i'}}]},
         {city: req.body.searchcity}
     ]).sort({ rating: -1 }).exec((err,docs)=>{
         if(!err) {
+           
             res.send(docs);
             console.log(docs);
+            console.log(docs.length);
         }
     });
-//     hospital.find({ city: req.body.searchcity}, (error,document)=>{
+    // hospital.find({ department: req.body.searchinput}, (error,document)=>{
         
-//         console.log(document);
+       
+    //     console.log(document);
+
    
         
    
-//     }).sort({ hospName: "BC Children's Hospital" });
+    // });
+// .sort({ hospName: "BC Children's Hospital" });
 //     hospital.find({ hospName:req.body.searchinput,city: req.body.searchcity}, (error,document)=>{
 //         console.log(document);
 //     });
 // });
-
 
 
 // app.get('/searchQuery', async (req,res)=>{
