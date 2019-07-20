@@ -22,10 +22,10 @@ db.once('open', ()=>{
     console.log("connected to mongodb");
 });
 
-// app.use((req, res, next)=> {
-// 	console.log(`${req.method} request for '${req.url}'`);
-// 	next();
-// });
+app.use((req, res, next)=> {
+	console.log(`${req.method} request for '${req.url}'`);
+	next();
+});
 
 //Hospital Data Insert
 
@@ -43,10 +43,8 @@ const hospital = mongoose.model('hospital', {
     diseases: Array
 });
 
-const readdata = fs.readFileSync('json.json');
-const data = JSON.parse(readdata);
-
-// //     // let objjson, obj;
+// const readdata = fs.readFileSync('json.json');
+// const data = JSON.parse(readdata);
 
 //*******************************dont delete (insertion of records commented) */
 
@@ -151,8 +149,6 @@ const clinics = mongoose.model('clinics', {
 
 app.post("/searchQuery", (req, res)=>{
 
-    // let searchinput = req.body.searchinput.toLowerCase();
-    // // searchinput = req.body.searchinput.charAt(0).toUpperCase();
     console.log(req.body.searchinput);
     // const capitalize = (st) =>{
     //     if(typeof st!=='string') return '';
@@ -213,9 +209,11 @@ app.post("/searchQuery", (req, res)=>{
 //         console.log(document);
 
 
-//    })
-   
-//     res.send("heyy");
+app.get("/searchQuery", async (req,res)=>{
+    // console.log(req.body);
+    // res.json("welcome");
+    const hospDetails = await hospital.find();
+    res.json(hospDetails);
 });
 
 app.listen(3000, ()=> console.log("Server Running"));
