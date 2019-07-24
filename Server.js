@@ -179,35 +179,8 @@ app.post("/searchQuery", (req, res)=>{
             console.log(docs);
             console.log(docs.length);
         }
-    });
-    // hospital.find({ department: req.body.searchinput}, (error,document)=>{
-        
-       
-    //     console.log(document);
-
-   
-        
-   
-    });
-// .sort({ hospName: "BC Children's Hospital" });
-//     hospital.find({ hospName:req.body.searchinput,city: req.body.searchcity}, (error,document)=>{
-//         console.log(document);
-//     });
-// });
-
-
-// app.get('/searchQuery', async (req,res)=>{
-
-//     console.log("hello");
-//     const searchInput = req.msg;
-//     // const abc=JSON.stringify(searchInput);
-//     console.log(searchInput);
-//     // console.log(req.body);
-   
-//     hospital.find({ city: searchInput  }, (error, document)=>{
- 
-//         console.log(document);
-
+    });   
+});
 
 app.get("/searchQuery", async (req,res)=>{
     // console.log(req.body);
@@ -219,16 +192,72 @@ app.get("/searchQuery", async (req,res)=>{
 
 app.post("/searchQuery2", (req, res)=>{
 
-    // JSON.stringify(req.body);
-
     // console.log(req.body.searchcity1);
     // console.log();
-
-
-
     hospital.find( {$or:[ {hospName: req.body.searchcity1.trim()},{hospName: req.body.searchcity2.trim()}]}).exec((err,docs)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            res.json(docs);
+            console.log(docs);
+        }
+    })
+});
+
+app.post("/searchQueryfilter", (req,res) =>{
+    console.log(req.body);
+
+    
+let city1,city2,city3,city4;
+
+    if(req.body.vancouver==true){
+       city1= req.body.vancouver1;
+    }
+    else{
+        city1='';
+    }
+    if(req.body.surrey==true){
+        city2= req.body.surrey1;
+    }
+    else{
+        city2='';
+    }
+
+    if(req.body.langley==true){
+        city3= req.body.langley1;
+    }
+    else{
+        city3='';
+    }
 
 
+
+    if(req.body.burnaby==true){
+        city4= req.body.burnaby1;
+    }
+    else{
+        city4='';
+    }
+
+
+    if(req.body.hospital === true)
+    {
+
+        hospital.find().and({or:[{city: city1},{city: city2},{city: city3},{city: city4}]},{type:req.body.hospital1}).exec((err,docs)=>{
+            if(err){
+                console.log(err);
+            }
+            else {
+                res.json(docs);
+                console.log(docs);
+                console.log(docs.length);
+            }
+        })
+    }
+    else if(req.body.walkin==true){
+
+        clinics.find({type:req.body.walkin1}).exec((err,docs)=>{
             if(err){
                 console.log(err);
             }
@@ -236,15 +265,11 @@ app.post("/searchQuery2", (req, res)=>{
                 res.json(docs);
                 console.log(docs);
             }
+        })
 
-    })
+
+    }
     
-
-
-
-
 });
-
-
 app.listen(3000, ()=> console.log("Server Running"));
 
