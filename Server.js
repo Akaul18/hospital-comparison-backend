@@ -188,7 +188,7 @@ app.post("/searchQuery", (req, res)=>{
    
         
    
-    // });
+    });
 // .sort({ hospName: "BC Children's Hospital" });
 //     hospital.find({ hospName:req.body.searchinput,city: req.body.searchcity}, (error,document)=>{
 //         console.log(document);
@@ -215,6 +215,33 @@ app.get("/searchQuery", async (req,res)=>{
     const hospDetails = await hospital.find();
     res.json(hospDetails);
 });
+
+hosp1: String;
+hosp2: String;
+
+app.post("/searchQuery2", (req, res)=>{
+
+    console.log(req.body.searchcity1);
+    console.log(req.body.searchcity2);
+
+    hospital.find({hospName: {$regex:req.body.searchcity1,$options:'i'}}).exec((err,docs)=>{
+
+
+            if(err){
+                console.log(err);
+            }
+            else{
+                console.log(docs);
+            }
+
+    })
+    
+
+
+
+
+});
+
 
 app.listen(3000, ()=> console.log("Server Running"));
 
