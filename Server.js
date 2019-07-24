@@ -216,21 +216,24 @@ app.get("/searchQuery", async (req,res)=>{
     res.json(hospDetails);
 });
 
-hosp1: String;
-hosp2: String;
 
 app.post("/searchQuery2", (req, res)=>{
 
-    console.log(req.body.searchcity1);
-    console.log(req.body.searchcity2);
+    // JSON.stringify(req.body);
 
-    hospital.find({hospName: {$regex:req.body.searchcity1,$options:'i'}}).exec((err,docs)=>{
+    // console.log(req.body.searchcity1);
+    // console.log();
+
+
+
+    hospital.find( {$or:[ {hospName: req.body.searchcity1.trim()},{hospName: req.body.searchcity2.trim()}]}).exec((err,docs)=>{
 
 
             if(err){
                 console.log(err);
             }
-            else{
+            else {
+                res.json(docs);
                 console.log(docs);
             }
 
