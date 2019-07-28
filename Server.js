@@ -169,7 +169,7 @@ app.post("/searchQuery", (req, res)=>{
 // });
 
     hospital.find().and([
-        { $or: [{hospName:{$regex:req.body.searchinput,$options:'i'}}, {type: {$regex:req.body.searchinput,$options:'i'}}, {department: {$regex:req.body.searchinput,$options:'i'}},
+        { $or: [{hospName:{$regex:req.body.searchinput,$options:'i'}}, {city: {$regex:req.body.searchinput,$options:'i'}}, {department: {$regex:req.body.searchinput,$options:'i'}},
         {diseases: {$regex:req.body.searchinput,$options:'i'}}]},
         {city: req.body.searchcity}
     ]).sort({ rating: -1 }).exec((err,docs)=>{
@@ -184,6 +184,8 @@ app.post("/searchQuery", (req, res)=>{
 
 app.get("/searchQuery", (req,res)=>{
     // console.log(req.body);
+    
+    
     // res.json("welcome");
     // const hospDetails = await 
     // hospital.find({$and:[{"_id":ObjectId("5d3896a9b0fb2809211ec3ec")},{"_id":ObjectId("5d3896a9b0fb2809211ec3ce")},{"_id":ObjectId("5d3896a9b0fb2809211ec3f5")}]})
@@ -199,6 +201,10 @@ app.get("/searchQuery", (req,res)=>{
         }
     });
     // res.json(hospDetails);
+    const hospDetails = await hospital.find();
+    // res.json(hospDetails);
+
+
 });
 
 
@@ -229,6 +235,7 @@ let city1,city2,city3,city4;
     else{
         city1='';
     }
+
     if(req.body.surrey==true){
         city2= req.body.surrey1;
     }
@@ -256,7 +263,18 @@ let city1,city2,city3,city4;
     if(req.body.hospital === true)
     {
 
-        hospital.find().and({or:[{city: city1},{city: city2},{city: city3},{city: city4}]},{type:req.body.hospital1}).exec((err,docs)=>{
+       hospital.find({$and: [{city: {$regex: city1,$options: 'i'}},{city: {$regex: city2,$options: 'i'}},{city: {$regex: city3,$options: 'i'}},{city: {$regex: city4,$options: 'i'}} , {type: req.body.hospital1}]}, (err,docs)=>{
+
+        if(!err){
+            console.log(docs);
+            console.log(docs.length);
+        }
+
+       })
+
+        // console.log(city1);
+
+        hospital.find().and({$or:[{city: city1},{city: city2},{city: city3},{city: city4}]},{type:req.body.hospital1}).exec((err,docs)=>{
             if(err){
                 console.log(err);
             }
