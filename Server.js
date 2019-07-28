@@ -201,7 +201,7 @@ app.get("/searchQuery", (req,res)=>{
         }
     });
     // res.json(hospDetails);
-    const hospDetails = await hospital.find();
+    // const hospDetails = await hospital.find();
     // res.json(hospDetails);
 
 
@@ -228,6 +228,7 @@ app.post("/searchQueryfilter", (req,res) =>{
 
     
 let city1,city2,city3,city4;
+let dept1,dept2,dept3,dept4,dept5;
 
     if(req.body.vancouver==true){
        city1= req.body.vancouver1;
@@ -250,40 +251,77 @@ let city1,city2,city3,city4;
         city3='';
     }
 
-
-
     if(req.body.burnaby==true){
         city4= req.body.burnaby1;
     }
     else{
         city4='';
     }
+    
+    if(req.body.cardiology==true){
+        dept1= req.body.cardiology1;
+    }
+    else{
+        dept1='';
+    }
+    if(req.body.ent==true){
+        dept2= req.body.ent1;
+    }
+    else{
+        dept2='';
+    }
+    if(req.body.gas==true){
+        dept3= req.body.gas1;
+    }
+    else{
+        dept3='';
+    }
+    if(req.body.gynae==true){
+        dept4= req.body.gynae1;
+    }
+    else{
+        dept4='';
+    }
+    if(req.body.ortho==true){
+        dept5= req.body.ortho1;
+    }
+    else{
+        dept5='';
+    }
+    // if(req.body.richmond==true){
+    //     city5= req.body.richmond1;
+    // }
+    // else{
+    //     city5='';
+    // }
 
-
+    
     if(req.body.hospital === true)
     {
-
-       hospital.find({city: {$in: [ city1, city2, city3, city4]}}, (err,docs)=>{
+        console.log(dept5);
+        hospital.find().and({city: {$in: [ city1, city2, city3, city4]}},{$or:{department: [dept1, dept2, dept3, dept4, dept5]}}).exec((err,docs)=>{
 
         if(!err){
             console.log(docs);
             console.log(docs.length);
+
         }
 
-       })
+            });
+            // console.log(dept1+dept2+dept3+dept4+dept5);
 
         // console.log(city1);
 
-        hospital.find().and({$or:[{city: city1},{city: city2},{city: city3},{city: city4}]},{type:req.body.hospital1}).exec((err,docs)=>{
-            if(err){
-                console.log(err);
-            }
-            else {
-                res.json(docs);
-                console.log(docs);
-                console.log(docs.length);
-            }
-        })
+        // hospital.find().and({$or:[{city: city1},{city: city2},{city: city3},{city: city4}]},{type:req.body.hospital1}).exec((err,docs)=>{
+        //     if(err){
+        //         console.log(err);
+        //     }
+        //     else {
+        //         res.json(docs);
+        //         console.log(docs);
+        //         console.log(docs.length);
+        //     }
+        // })
     }
     else if(req.body.walkin==true){
 
