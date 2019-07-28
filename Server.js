@@ -297,17 +297,27 @@ let dept1,dept2,dept3,dept4,dept5;
 
     
     if(req.body.hospital === true)
-    {
-        console.log(dept5);
-        hospital.find().and({city: {$in: [ city1, city2, city3, city4]}},{$or:{department: [dept1, dept2, dept3, dept4, dept5]}}).exec((err,docs)=>{
+    {   
+        hospital.find(
+            { $and: [{city: {$in:[city1,city2,city3,city4]}}, {department:{$in: [dept1,dept2,dept3,dept4,dept5]}}]}
+        ).sort({ rating: -1 }).exec((err,docs)=>{
+            if(!err) {
+               
+                res.send(docs);
+                console.log(docs);
+                console.log(docs.length);
+            }
+        });
+        // hospital.find().and({city: {$in: [ city1, city2, city3, city4]}},{$or:{department: [dept1, dept2, dept3, dept4, dept5]}}).exec((err,docs)=>{
 
-        if(!err){
-            console.log(docs);
-            console.log(docs.length);
+        // if(!err){
+        //     res.send(docs);
+        //     console.log(docs);
+        //     console.log(docs.length);
 
-        }
+        // }
 
-            });
+        //     });
             // console.log(dept1+dept2+dept3+dept4+dept5);
 
         // console.log(city1);
@@ -325,15 +335,17 @@ let dept1,dept2,dept3,dept4,dept5;
     }
     else if(req.body.walkin==true){
 
-        clinics.find({type:req.body.walkin1}).exec((err,docs)=>{
-            if(err){
-                console.log(err);
-            }
-            else {
-                res.json(docs);
+        clinics.find(
+            { $and: [{city: {$in:[city1,city2,city3,city4]}}, {department:{$in: [dept1,dept2,dept3,dept4,dept5]}}]}
+        ).sort({ rating: -1 }).exec((err,docs)=>{
+            if(!err) {
+               
+                res.send(docs);
                 console.log(docs);
+                console.log(docs.length);
             }
-        })
+        });
+        
 
 
     }
