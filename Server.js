@@ -249,7 +249,7 @@ let city1,city2,city3,city4;
     if(req.body.hospital === true)
     {
 
-       hospital.find({$and: [{city: {$regex: city1,$options: 'i'}},{city: {$regex: city2,$options: 'i'}},{city: {$regex: city3,$options: 'i'}},{city: {$regex: city4,$options: 'i'}} , {type: req.body.hospital1}]}, (err,docs)=>{
+       hospital.find({city: {$in: [ city1, city2, city3, city4]}}, (err,docs)=>{
 
         if(!err){
             console.log(docs);
