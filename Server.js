@@ -219,18 +219,42 @@ app.post("/querySearch/singleHospital", (req,res)=>{
 
 app.post("/searchQuery2", (req, res)=>{
 
-    // console.log(req.body.searchcity1);
     // console.log();
+    if(hospCheck==true){
     hospital.find( {$or:[ {hospName: req.body.searchcity1.trim()},{hospName: req.body.searchcity2.trim()}]}).exec((err,docs)=>{
         if(err){
             console.log(err);
         }
         else {
             res.json(docs);
-            console.log(docs);
+            // console.log(docs);
+
+            
+            // console.log(req.body.searchcity2);
         }
     })
+}
+else{
+    clinics.find( {$or:[ {clinicName: req.body.searchcity1.trim()},{clinicName: req.body.searchcity2.trim()}]}).exec((err,docs)=>{
+        if(err){
+            console.log(err);
+        }
+        else {
+            res.json(docs);
+            // console.log(docs);
+
+            
+            // console.log(req.body.searchcity2);
+        }
+    })
+
+}
+    // console.log(hospCheck);
+
+
+    
 });
+let hospCheck;
 
 app.post("/searchQueryfilter", (req,res) =>{
     console.log(req.body);
@@ -238,6 +262,8 @@ app.post("/searchQueryfilter", (req,res) =>{
     
 let city1,city2,city3,city4;
 let dept1,dept2,dept3,dept4,dept5;
+
+hospCheck = req.body.hospital;
 
     if(req.body.vancouver==true){
        city1= req.body.vancouver1;
