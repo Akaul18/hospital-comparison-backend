@@ -207,6 +207,15 @@ app.get("/searchQuery", (req,res)=>{
 
 });
 
+app.post("/querySearch/singleHospital", (req,res)=>{
+    // res.json("hey");
+    hospital.find({hospName:req.body.hospName},(err,docs)=>{
+        if(!err)
+        {
+            res.json(docs);
+        }
+    })
+});
 
 app.post("/searchQuery2", (req, res)=>{
 
