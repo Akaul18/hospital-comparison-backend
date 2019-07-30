@@ -184,26 +184,23 @@ app.post("/searchQuery", (req, res)=>{
 
 app.get("/searchQuery", (req,res)=>{
     // console.log(req.body);
-    
-    
-    // res.json("welcome");
-    // const hospDetails = await 
-    // hospital.find({$and:[{"_id":ObjectId("5d3896a9b0fb2809211ec3ec")},{"_id":ObjectId("5d3896a9b0fb2809211ec3ce")},{"_id":ObjectId("5d3896a9b0fb2809211ec3f5")}]})
 
-    hospital.find({hospName: { $in: [
-        mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3ec'),
-        mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3ce'), 
-        mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3f5')
-    ]}}).exec((err,docs)=>{
+    // hospital.find({hospName: { $in: [
+    //     mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3ec'),
+    //     mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3ce'), 
+    //     mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3f5')
+    // ]}}).exec((err,docs)=>{
+    //     if(!err)
+    //     {
+    //         res.json(docs);
+    //     }
+    // });
+    hospital.find({hospName: { $in: ["Surrey Memorial Hospital","BC Children's Hospital","Vancouver General Hospital - Willow Pavilion"]}}).exec((err,docs)=>{
         if(!err)
         {
             res.json(docs);
         }
     });
-    // res.json(hospDetails);
-    // const hospDetails = await hospital.find();
-    // res.json(hospDetails);
-
 
 });
 
