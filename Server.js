@@ -190,7 +190,7 @@ app.get("/searchQuery", (req,res)=>{
     // const hospDetails = await 
     // hospital.find({$and:[{"_id":ObjectId("5d3896a9b0fb2809211ec3ec")},{"_id":ObjectId("5d3896a9b0fb2809211ec3ce")},{"_id":ObjectId("5d3896a9b0fb2809211ec3f5")}]})
 
-    hospital.find({'_id': { $in: [
+    hospital.find({hospName: { $in: [
         mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3ec'),
         mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3ce'), 
         mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3f5')
