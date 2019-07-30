@@ -216,7 +216,7 @@ app.post("/querySearch/singleHospital", (req,res)=>{
 
 app.post("/searchQuery2", (req, res)=>{
 
-    // console.log();
+    console.log(req.body);
     if(hospCheck==true){
     hospital.find( {$or:[ {hospName: req.body.searchcity1.trim()},{hospName: req.body.searchcity2.trim()}]}).exec((err,docs)=>{
         if(err){
