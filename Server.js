@@ -10,7 +10,8 @@ app.use(cors());
 app.use(bodyparser.json());
 
 
-mongoose.connect('mongodb://localhost/hospicheck', { useNewUrlParser: true });
+// mongoose.connect('mongodb://localhost/hospicheck', { useNewUrlParser: true });
+mongoose.connect('mongodb+srv://hospiUser:hospiUser@hospicheckdbcluster-ti9c2.mongodb.net/test?retryWrites=true&w=majority',{useNewUrlParser: true});
 
 var db = mongoose.connection;
 
@@ -92,31 +93,6 @@ const clinics = mongoose.model('clinics', {
     diseases: Array
 });
 
-
-
-
-    // filtering based on different cities
-
-    // clinics.find({ city: "Vancouver" }, (err,document)=>{
-
-
-    //     // console.log(document);
-
-
-    // })
-
-    // // sorting  
-
-
-    // const abc = hospital.find({ city: "Vancouver", phone: null } , (err, document) =>{
-
-
-    //     console.log(document);
-
-    // }); 
-
-
-
 //*******************dont delete. Clinics data inserted */
 
 // const readdata2 = fs.readFileSync('clinics.json');
@@ -152,24 +128,6 @@ const clinics = mongoose.model('clinics', {
 app.post("/searchQuery", (req, res)=>{
 
     console.log(req.body.searchinput);
-    // const capitalize = (st) =>{
-    //     if(typeof st!=='string') return '';
-    //     return st.charAt(0).toUpperCase() + st.slice(1);
-    // }
-    // searchinput = capitalize(searchinput);
-
-  
-    
-    
-//     hospital.find( {type:"hospital",$or:[ {hospName: new RegExp(req.body.searchinput)}, {PHONE_NUMBER: new RegExp(req.body.searchinput)}], city: req.body.searchcity} , 
-//   function(err,docs){
-//     if(!err) {
-//         res.send(docs);
-//     console.log(docs);
-//     }
-    
-// });
-
     hospital.find().and([
         { $or: [{hospName:{$regex:req.body.searchinput,$options:'i'}}, {city: {$regex:req.body.searchinput,$options:'i'}}, {department: {$regex:req.body.searchinput,$options:'i'}},
         {diseases: {$regex:req.body.searchinput,$options:'i'}}]},
@@ -185,24 +143,12 @@ app.post("/searchQuery", (req, res)=>{
 });
 
 app.get("/searchQuery", (req,res)=>{
-    // console.log(req.body);
-
     // hospital.find({hospName: { $in: [
     //     mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3ec'),
-    //     mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3ce'), 
-    //     mongoose.Types.ObjectId('5d3896a9b0fb2809211ec3f5')
-    // ]}}).exec((err,docs)=>{
-    //     if(!err)
-    //     {
-    //         res.json(docs);
-    //     }
-    // });
-    hospital.find({hospName: { $in: ["Surrey Memorial Hospital","BC Children's Hospital","Vancouver General Hospital - Willow Pavilion"]}}).exec((err,docs)=>{
-        if(!err)
-        {
-            res.json(docs);
-        }
-    });
+    
+    hospital.find({hospName: { $in: ["Surrey Memorial Hospital","BC Children's Hospital","Vancouver General Hospital - Willow Pavilion"]}}).then((docs)=>{
+		res.send(docs);
+	});
 
 });
 
